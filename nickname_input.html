@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置昵称</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); /* 渐变背景 */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .auth-container {
+            background-color: rgba(255, 255, 255, 0.95); /* 半透明白色背景 */
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* 更明显的阴影 */
+            text-align: center;
+            width: 100%;
+            max-width: 400px; /* 最大宽度 */
+            backdrop-filter: blur(5px); /* 毛玻璃效果 */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 35px;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .input-group input[type="text"] {
+            width: calc(100% - 20px); /* 减去padding */
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .input-group input[type="text"]:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+            outline: none;
+        }
+        button {
+            background-color: #2575fc; /* 蓝色 */
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #1a5bb3;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .error-message {
+            color: #dc3545; /* 红色 */
+            margin-top: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .footer-note {
+            color: #777;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h1>设置您的昵称</h1>
+        <form action="/nickname_setup" method="post">
+            <div class="input-group">
+                <label for="nickname">输入您的昵称:</label>
+                <input type="text" id="nickname" name="nickname" placeholder="例如：张三、小李" required autocomplete="off">
+            </div>
+            <button type="submit">进入聊天</button>
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+        </form>
+        <p class="footer-note">输入昵称，即可进入聊天室。</p>
+    </div>
+</body>
+</html> 

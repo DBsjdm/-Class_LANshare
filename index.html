@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class_LANshare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+            margin: 0;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: #2563eb;
+            color: #fff;
+            padding: 18px 0 14px 0;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+        }
+        .main-container {
+            max-width: 900px;
+            margin: 40px auto 0 auto;
+            padding: 0 16px 32px 16px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(37,99,235,0.07);
+            margin-bottom: 32px;
+            padding: 32px 28px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .card h2, .card h3 {
+            margin: 0 0 18px 0;
+            color: #2563eb;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .online-users-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .online-users-list li {
+            background: #f1f5f9;
+            color: #2563eb;
+            border-radius: 6px;
+            padding: 6px 16px;
+            font-size: 1rem;
+        }
+        .message-list {
+            width: 100%;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+            margin-bottom: 10px;
+        }
+        .message-list p {
+            margin: 0 0 8px 0;
+            padding: 0;
+            color: #374151;
+        }
+        .message-input {
+            display: flex;
+            gap: 12px;
+        }
+        .message-input input[type=text] {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #f3f4f6;
+            transition: border 0.2s;
+        }
+        .message-input input[type=text]:focus {
+            border: 1.5px solid #2563eb;
+            outline: none;
+            background: #fff;
+        }
+        .message-input button {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .message-input button:hover {
+            background: #1d4ed8;
+        }
+        .upload-forms-container {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .upload-form {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 18px 16px 12px 16px;
+            flex: 1 1 220px;
+            min-width: 220px;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.04);
+        }
+        .file-input-label {
+            display: block;
+            background: #2563eb;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        .file-input-label:hover {
+            background: #1d4ed8;
+        }
+        .file-input-wrapper input[type=file] {
+            display: none;
+        }
+        .upload-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .upload-btn:hover {
+            background: #16a34a;
+        }
+        .progress-container {
+            width: 100%;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: none;
+            height: 16px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb 0%, #22c55e 100%);
+            width: 0;
+            transition: width 0.4s;
+        }
+        #status {
+            margin-top: 10px;
+            color: #666;
+            min-height: 1.2em;
+            text-align: center;
+            width: 100%;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            transition: background 0.2s;
+            font-size: 1rem;
+        }
+        .file-item span {
+            flex-grow: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+        .file-item:hover {
+            background: #e0e7ff;
+        }
+        .download-btn {
+            background: #2563eb;
+            color: #fff;
+            padding: 6px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .download-btn:hover {
+            background: #1d4ed8;
+        }
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 0 4px;
+            }
+            .card {
+                padding: 18px 6px 16px 6px;
+            }
+            .upload-forms-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">Class_LANshare</div>
+    <div class="main-container">
+        <div class="card">
+            <h2>在线用户 <span style="font-size:1rem;color:#64748b;font-weight:400;">(<span id="user-count">0</span>)</span></h2>
+            <ul id="user-list" class="online-users-list"></ul>
+        </div>
+        <div class="card">
+            <h2>消息互动</h2>
+            <div style="color:#64748b;font-size:1rem;margin-bottom:8px;">当前聊天对象: <span id="current-recipient">所有人 (公聊)</span></div>
+            <div id="messages" class="message-list"></div>
+            <div class="message-input">
+                <input type="text" id="message-text" placeholder="输入消息...">
+                <button id="send-message-btn">发送</button>
+            </div>
+        </div>
+        <div class="card">
+            <h2>文件和文件夹上传</h2>
+            <div class="upload-forms-container">
+                <div class="upload-form">
+                    <h3>上传文件</h3>
+                    <form id="file-upload-form" enctype="multipart/form-data">
+                        <label for="file-input" class="file-input-label">选择文件</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="file-input" name="files" multiple>
+                        </div>
+                        <button type="submit" class="upload-btn">上传</button>
+                    </form>
+                </div>
+                <div class="upload-form">
+                    <h3>上传文件夹</h3>
+                    <form id="folder-upload-form" enctype="multipart/form-data">
+                        <label for="folder-input" class="file-input-label">选择文件夹</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="folder-input" name="files" webkitdirectory directory>
+                        </div>
+                        <button type="submit" class="upload-btn">上传</button>
+                    </form>
+                </div>
+            </div>
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div id="status"></div>
+        </div>
+        <div class="card">
+            <h2>可下载的文件</h2>
+            <ul class="file-list">
+                {% for file in files %}
+                <li class="file-item">
+                    <span>{{ file }}</span>
+                    <a href="{{ url_for('download_file', filename=file) }}" class="download-btn">下载</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        // Socket.IO 连接和事件处理
+        const socket = io();
+        socket.on('connect', () => {
+            console.log('Connected to server!');
+        });
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server.');
+            document.getElementById('user-list').innerHTML = '';
+            document.getElementById('user-count').textContent = '0';
+        });
+        socket.on('update_users', (users) => {
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = '';
+            document.getElementById('user-count').textContent = users.length;
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = user.nickname;
+                userList.appendChild(li);
+            });
+        });
+        socket.on('new_message', (msg) => {
+            const messagesDiv = document.getElementById('messages');
+            const messageElement = document.createElement('p');
+            messageElement.textContent = `${msg.nickname}: ${msg.text}`;
+            messageElement.classList.add('message', 'public-message');
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+        function sendMessage() {
+            const messageInput = document.getElementById('message-text');
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                socket.emit('send_message', { text: messageText });
+                messageInput.value = '';
+            }
+        }
+        document.getElementById('send-message-btn').addEventListener('click', sendMessage);
+        document.getElementById('message-text').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+        // 文件上传
+        document.getElementById('file-upload-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById('file-input');
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progress-bar');
+            const progressContainer = document.getElementById('progress-container');
+            if (fileInput.files.length === 0) {
+                status.textContent = '请选择要上传的文件';
+                return;
+            }
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append('files[]', fileInput.files[i]);
+            }
+            status.textContent = '正在上传...';
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            try {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/upload', true);
+                xhr.upload.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        const percentComplete = (event.loaded / event.total) * 100;
+                        progressBar.style.width = percentComplete + '%';
+                        status.textContent = '上传中: ' + Math.round(percentComplete) + '%';
+                    }
+                };
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        status.textContent = '上传成功！';
+                        progressBar.style.width = '100%';
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        status.textContent = '上传失败：' + xhr.responseText;
+                        progressContainer.style.display = 'none';
+                    }
+                };
+                xhr.onerror = function() {
+                    status.textContent = '上传出错：网络错误';
+                    progressContainer.style.display = 'none';
+                };
+                xhr.send(formData);
+            } catch (error) {
+                status.textContent = '上传出错：' + error.message;
+                progressContainer.style.display = 'none';
+            }
+        };
+        // 文件夹上传
+        document.getElementById('folder-upload-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            const folderInput = document.getElementById('folder-input');
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progress-bar');
+            const progressContainer = document.getElementById('progress-container');
+            if (folderInput.files.length === 0) {
+                status.textContent = '请选择要上传的文件夹';
+                return;
+            }
+            if (folderInput.files.length > 500) {
+                status.textContent = '警告：选择的文件夹包含大量文件 (' + folderInput.files.length + ')，部分浏览器可能无法完全上传。请考虑分批上传。';
+            }
+            for (let i = 0; i < folderInput.files.length; i++) {
+                formData.append('files[]', folderInput.files[i], folderInput.files[i].webkitRelativePath || folderInput.files[i].name);
+            }
+            status.textContent = '正在上传文件夹...';
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            try {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/upload', true);
+                xhr.upload.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        const percentComplete = (event.loaded / event.total) * 100;
+                        progressBar.style.width = percentComplete + '%';
+                        status.textContent = '上传中: ' + Math.round(percentComplete) + '%';
+                    }
+                };
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        status.textContent = '文件夹上传成功！';
+                        progressBar.style.width = '100%';
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        status.textContent = '文件夹上传失败：' + xhr.responseText;
+                        progressContainer.style.display = 'none';
+                    }
+                };
+                xhr.onerror = function() {
+                    status.textContent = '上传出错：网络错误';
+                    progressContainer.style.display = 'none';
+                };
+                xhr.send(formData);
+            } catch (error) {
+                status.textContent = '上传出错：' + error.message;
+                progressContainer.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
